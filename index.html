@@ -36,6 +36,17 @@ details summary{cursor:pointer;font-weight:600}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => console.log("Service Worker berhasil didaftarkan"))
+        .catch((error) => console.error("Service Worker gagal:", error));
+    });
+  }
+</script>
+
 <main id="app"></main>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
