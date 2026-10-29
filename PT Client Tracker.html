@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PT Client Tracker</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--tx:#1c1c1a;--mu:#6b6b66;--bd:#e3e3dd;--ac:#0f766e;--ac2:#ccfbf1;--dg:#b91c1c;--cut:#b45309;--bulk:#1d4ed8;--fit:#0f766e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--card:#1f1f1d;--tx:#f1f1ee;--mu:#9d9d96;--bd:#33332f;--ac:#2dd4bf;--ac2:#134e4a;--dg:#f87171;--cut:#fbbf24;--bulk:#60a5fa;--fit:#2dd4bf}}
+:root[data-theme="dark"]{--bg:#141413;--card:#1f1f1d;--tx:#f1f1ee;--mu:#9d9d96;--bd:#33332f;--ac:#2dd4bf;--ac2:#134e4a;--dg:#f87171;--cut:#fbbf24;--bulk:#60a5fa;--fit:#2dd4bf}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:14px}
+h1{font-size:20px;margin:4px 0 12px}h2{font-size:17px;margin:0}h3{font-size:14px;margin:14px 0 6px;color:var(--mu);font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sp{justify-content:space-between}
+input,select,button{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;min-height:38px}
+input,select{flex:1;min-width:90px}
+button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#06201d}}
+button.g{border:0;background:none;color:var(--mu);padding:4px 8px;min-height:0}button.d{color:var(--dg)}
+.b{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--bd);color:var(--mu)}
+.cutting{color:var(--cut);border-color:var(--cut)}.bulking{color:var(--bulk);border-color:var(--bulk)}.fit{color:var(--fit);border-color:var(--fit)}
+.mu{color:var(--mu);font-size:13px}.tabs{display:flex;gap:6px;margin:10px 0}.tabs{overflow-x:auto}.tabs button{flex:1 0 auto;padding:8px 10px;font-size:13px}.rpt h2{margin-bottom:6px}.rpt div{margin-top:3px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}.cw{text-align:center;font-size:12px}.cd{min-width:0;min-height:46px;border:1px solid var(--bd);border-radius:8px;padding:3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px}.cd.td{border-color:var(--ac);font-weight:700}.cd.sl{background:var(--ac2)}.dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;font-size:10px;line-height:1}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.dots .dot{margin:0}.ses{padding:8px 10px;margin-bottom:8px;background:var(--bg);border-radius:8px}.mini{flex:none;width:80px;min-width:0}.fl{font-size:9px;line-height:1.15;font-weight:600;text-align:center;max-width:100%;overflow:hidden}.fl span{display:block}.lb{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--mu);flex:1;min-width:100px}.tabs .on{background:var(--ac2);border-color:var(--ac);font-weight:600}
+.cl{cursor:pointer}.stat{display:flex;gap:8px;margin-bottom:10px}.stat div{flex:1;text-align:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px}.stat b{display:block;font-size:20px}
+label.ck{display:inline-flex;gap:6px;align-items:center;margin:4px 12px 0 0;font-size:14px}label.ck input{flex:none;min-width:0;min-height:0;width:18px;height:18px}
+.pr{font-size:22px;font-weight:700;color:var(--ac)}.new{font-size:11px;background:var(--ac2);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px}
+details summary{cursor:pointer;font-weight:600}
+.sg{display:grid;grid-template-columns:30px 1fr 62px 62px 40px;gap:6px;align-items:center;margin-top:4px;padding:3px 4px;border-radius:8px}.sg.dn{background:var(--ac2)}.sg input{min-width:0;width:100%;text-align:center;padding:6px 4px}.sg button{padding:6px 0}.sh{font-size:12px;color:var(--mu);margin-top:6px}.rb{position:relative;height:22px;background:var(--bd);border-radius:6px;overflow:hidden;margin:4px 0}.rb i{position:absolute;inset:0 auto 0 0;background:var(--ac2);border-right:2px solid var(--ac)}.rb span{position:relative;display:block;text-align:center;font-size:12px;font-weight:600;line-height:22px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9),today=()=>new Date().toLocaleDateString('sv'),nowT=()=>new Date().toTimeString().slice(0,5);
+const LV=['Beginner','Medium','Advance'],CT=['Cutting','Bulking','Fit'];
+const TPL={'Push Day':[['Overhead Press',4,'6-10'],['Incline Bench Press',3,'8-10'],['Dips',3,'8-12'],['Lateral Raise',3,'12-15'],['Triceps Pushdown',3,'10-12']],'Pull Day':[['Deadlift',3,'5-8'],['Pull-up',3,'6-10'],['Dumbbell Row',3,'8-12'],['Face Pull',3,'12-15'],['Barbell Curl',3,'8-12'],['Hammer Curl',2,'10-12']],'Dada':[['Barbell Bench Press',4,'6-10'],['Incline Dumbbell Press',3,'8-12'],['Pec Deck',3,'10-12'],['Cable Fly',3,'12-15'],['Push-up',2,'Max']],'Back':[['Assisted Pull-up',3,'6-10'],['Lat Pulldown',3,'8-12'],['Barbell Row',3,'8-10'],['Seated Cable Row',3,'10-12'],['Back Extension',3,'12-15']],'Leg':[['Back Squat',4,'6-10'],['Leg Press',3,'10-12'],['Walking Lunge',3,'10-12'],['Leg Extension',3,'12-15'],['Calf Raise',4,'12-15']],'Upper Body':[['Chest Press Machine',3,'8-10'],['T-Bar Row',3,'8-10'],['Dumbbell Shoulder Press',3,'8-10'],['Chin-up',3,'6-10'],['Dumbbell Curl',2,'12'],['Overhead Triceps Extension',2,'12']],'Lower Body':[['Front Squat',3,'8-10'],['Romanian Deadlift',3,'8-10'],['Bulgarian Split Squat',3,'10-12'],['Hip Thrust',3,'10-12'],['Leg Curl',3,'12']],'Full Body':[['Goblet Squat',3,'10-12'],['Dumbbell Press',3,'8-12'],['Inverted Row',3,'8-12'],['Glute Bridge',3,'12-15'],['Plank',3,'30-45 dtk']]};
+let clrArm=false;
+function applyTpl(c,k,L){L=L||c.program;(TPL[k]||[]).forEach(([name,sets,reps])=>{if(!L.some(e=>e.name.toLowerCase()===name.toLowerCase()))L.push({name,sets,reps,day:L===c.program?k:''})})}
+let S={clients:[]},sel=null,tab='ses',q='',fc='',delArm=false,ref=null,tm=null;
+const cur=()=>S.clients.find(c=>c.id===sel);
+
+try{const l=localStorage.getItem('pt-tracker');if(l)S=JSON.parse(l)}catch(e){}
+function save(){
+  try{localStorage.setItem('pt-tracker',JSON.stringify(S))}catch(e){}
+  if(ref){clearTimeout(tm);tm=setTimeout(()=>{ref.set({json:JSON.stringify(S)}).catch(()=>{})},400)}
+}
+async function init(){
+  try{
+    const db=await claude.use('db'),user=await claude.use('user');
+    if(db&&user){const id=await user.id();
+      if(id){ref=db.collection('data/users/'+id).doc('tracker');
+        const s=await ref.get();
+        if(s.exists&&s.data().json){S=JSON.parse(s.data().json);render()}else if(S.clients.length)save();
+      }}
+  }catch(e){}
+}
+
+function badges(c){return `<span class="b">${esc(c.gender)} · ${esc(c.age)} th</span> <span class="b">${esc(c.level)}</span> <span class="b ${c.cat.toLowerCase()}">${esc(c.cat)}</span>`}
+function listHTML(){
+  const L=S.clients.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())&&(!fc||c.cat===fc));
+  if(!L.length)return `<p class="mu">${S.clients.length?'Tidak ada client yang cocok.':'Belum ada client. Tambahkan client pertama di atas.'}</p>`;
+  return L.map(c=>`<div class="card cl" data-a="open" data-i="${c.id}"><div class="row sp"><b><i class="dot" style="background:${colorOf(c)}"></i>${esc(c.name)}</b><span class="mu">${c.att.filter(s=>s.hadir).length} sesi</span></div><div style="margin-top:6px">${badges(c)}</div></div>`).join('');
+}
+function renderList(){
+  const n=S.clients.length,cat=k=>S.clients.filter(c=>c.cat===k).length;
+  $('#app').innerHTML=`<h1>Client Tracker</h1>${topNav()}
+  <div class="stat"><div><b>${n}</b><span class="mu">Client</span></div><div><b>${cat('Cutting')}</b><span class="mu">Cutting</span></div><div><b>${cat('Bulking')}</b><span class="mu">Bulking</span></div><div><b>${cat('Fit')}</b><span class="mu">Fit</span></div></div>
+  <details class="card" ${n?'':'open'}><summary>+ Tambah client</summary><div class="row" style="margin-top:10px">
+  <input id="nn" placeholder="Nama client" style="flex-basis:100%">
+  <select id="ng"><option>Pria</option><option>Wanita</option></select><input id="na" type="number" min="10" max="99" placeholder="Umur">
+  <select id="nl">${LV.map(x=>`<option>${x}</option>`).join('')}</select><select id="nc">${CT.map(x=>`<option>${x}</option>`).join('')}</select>
+  <select id="nt" style="flex-basis:100%"><option value="">Template program: kosong (atur manual)</option>${Object.keys(TPL).map(x=>`<option>${x}</option>`).join('')}</select>
+  <button class="p" data-a="addC" style="flex-basis:100%">Simpan client</button></div></details>
+  <div class="row" style="margin-bottom:10px"><input id="sq" placeholder="Cari nama…" value="${esc(q)}"><select id="fc"><option value="">Semua program</option>${CT.map(x=>`<option ${fc===x?'selected':''}>${x}</option>`).join('')}</select></div>
+  <div id="lst">${listHTML()}</div>`;
+}
+
+const OP={};let ps='pr';document.addEventListener('click',e=>{const m=e.target.closest('summary'),d=m&&m.parentElement;if(d&&d.tagName==='DETAILS'&&d.id)OP[d.id]=!d.open});
+const WD=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],WO=[1,2,3,4,5,6,0];
+function dayUI(p){const ds=p.days||[];return `<h3>Hari latihan di kalender</h3><div class="tabs" style="margin:0">${WO.map(w=>`<button class="${ds.includes(w)?'on':''}" data-a="pwd" data-i="${w}">${WD[w]}</button>`).join('')}</div><div class="row" style="margin-top:8px"><label class="lb">Jam latihan<input type="time" data-pg="time" value="${esc(p.time||'08:00')}"></label></div>`+WO.filter(w=>ds.includes(w)).map(w=>`<div class="row" style="margin-top:8px"><b style="width:36px">${WD[w]}</b><select data-pgf="${w}"><option value="">Fokus latihan</option>${Object.keys(TPL).map(x=>`<option ${(p.focus||{})[w]===x?'selected':''}>${x}</option>`).join('')}</select></div>`).join('')}
+function virt(c){const p=c.pkg;if(!p||p.type!=='bulanan'||!(p.days||[]).length||!(+p.months>0))return[];
+  const st=p.start||today(),tot=+p.meets||0,out=[],a=c.att.map(s=>s.date),d0=new Date(+st.slice(0,4),+st.slice(5,7)-1,+st.slice(8,10),12),e=new Date(+st.slice(0,4),+st.slice(5,7)-1+(+p.months),+st.slice(8,10),12);
+  let n=0;for(let d=new Date(d0);d<e;d.setDate(d.getDate()+1)){const wd=d.getDay();if(!p.days.includes(wd))continue;if(tot&&n>=tot)break;n++;const k=d.toLocaleDateString('sv');if(!a.includes(k))out.push({id:'v'+c.id+k,virtual:true,date:k,time:p.time||'08:00',focus:(p.focus||{})[wd]||'',plan:true,done:[]})}
+  return out}
+function pkgHTML(c){
+  const p=c.pkg||{type:'sesi'},bl=p.type==='bulanan',tot=+p.meets||0,st=p.start||today(),hadir=c.att.filter(s=>s.hadir&&s.date>=st).length;
+  let end='';if(bl&&+p.months>0){const d=new Date(+st.slice(0,4),+st.slice(5,7)-1+(+p.months),+st.slice(8,10),12);end=d.toLocaleDateString('sv')}
+  const pct=tot?Math.min(100,Math.round(hadir/tot*100)):0;
+  const sum=bl?`Bulanan · ${p.months||1} bln · hadir ${hadir}${tot?'/'+tot:''}${(p.days||[]).length?' · '+WO.filter(w=>p.days.includes(w)).map(w=>WD[w]).join(' '):''}`:'Per sesi';
+  return `<details id="pkd" class="card" ${OP.pkd||!c.pkg?'open':''}><summary><b>Paket:</b> ${esc(sum)}</summary><div class="tabs" style="margin:8px 0"><button class="${bl?'':'on'}" data-a="pkt" data-i="sesi">Per sesi</button><button class="${bl?'on':''}" data-a="pkt" data-i="bulanan">Bulanan</button></div>`+(bl?`<div class="row"><label class="lb">Lama program (bulan)<input type="number" min="1" data-pg="months" value="${esc(p.months||1)}"></label><label class="lb">Mulai<input type="date" data-pg="start" value="${esc(st)}"></label></div><div class="row" style="margin-top:8px"><label class="lb">Total pertemuan<input type="number" min="1" data-pg="meets" value="${esc(p.meets||'')}" placeholder="mis. 12"></label><label class="lb">Latihan per minggu<input type="number" min="1" max="7" data-pg="perWeek" value="${esc(p.perWeek||'')}" placeholder="mis. 3"></label></div>${dayUI(p)}${virt(c).length?`<button class="p" data-a="pkgcal" style="width:100%;margin-top:10px">Tambahkan ${virt(c).length} jadwal ke kalender</button>`:''}<button data-a="gocal" data-i="${esc(st)}" style="width:100%;margin-top:6px">Lihat di kalender</button><div class="rb" style="margin-top:10px;height:26px"><i style="width:${pct}%"></i><span style="line-height:26px">Hadir ${hadir}${tot?' dari '+tot+' pertemuan':''}</span></div><div class="mu">${tot?'Sisa '+Math.max(0,tot-hadir)+' pertemuan · ':''}${p.perWeek?p.perWeek+'x latihan/minggu · ':''}Berakhir ${esc(end)}</div>`:`<div class="mu">Tanpa paket bulanan. Atur program per pertemuan di tab Sesi: pilih tanggal, buat sesi, lalu isi gerakannya di bagian Program per tanggal di bawah.</div>`)+`</details><h3>Program latihan</h3>`;
+}
+function progHTML(c){return pkgHTML(c)+progTop(c)+progHTML0(c)}
+function progHTML0(c){
+  return `<details id="tpx" class="card" ${OP.tpx?'open':''}><summary>Template program</summary><div class="row" style="margin-top:8px"><select id="tp"><option value="">Pilih template…</option>${Object.keys(TPL).map(x=>`<option>${x}</option>`).join('')}</select><button data-a="applyT">Terapkan</button>${PL(c).length?`<button class="g d" data-a="clrEx">${clrArm?'Yakin kosongkan?':'Kosongkan'}</button>`:''}</div><div class="mu" style="margin-top:6px">Template menambah gerakan ke program (gerakan yang sudah ada tidak diduplikasi). Kamu tetap bisa menambah atau menghapus gerakan manual.</div></details>`+`${progAdd()}`+
+  progList(c);
+}
+let pgc='Dada',pgd='',pm='date',pdate=today();
+const PL=c=>{if(pm!=='date')return c.program;c.daily=c.daily||{};return c.daily[pdate]=c.daily[pdate]||[]},dateLong=d=>new Date(+d.slice(0,4),+d.slice(5,7)-1,+d.slice(8,10),12).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),dayProg=(c,s)=>{let L=(c.daily||{})[s.date]||[];if(!L.length&&s.focus)L=c.program.filter(e=>e.day===s.focus);return L.length?`<div class="mu" style="margin-top:4px">${L.map(e=>esc(e.name)).join(', ')}</div>`:''};
+const pkList=k=>(LIB[k]||[]).map(x=>`<label class="ck"><input type="checkbox" data-pk="${esc(x)}">${esc(x)}</label>`).join(''),exFor=(c,s)=>{const dp=(c.daily||{})[s.date];if(dp&&dp.length)return dp;if(!s.focus)return c.program;const m=c.program.filter(e=>e.day===s.focus||!e.day);return c.program.some(e=>e.day===s.focus)?m:c.program};
+function progTop(c){
+  const dl=c.daily||{};
+  const opts=Object.keys(TPL).filter(k=>c.program.some(e=>e.day===k)).map(k=>`<option value="b:${k}">Program dasar: ${k}</option>`).join('')+(c.program.some(e=>!e.day)?'<option value="b:">Program dasar: Umum</option>':'')+Object.keys(dl).filter(k=>k!==pdate&&dl[k].length).sort().reverse().slice(0,14).map(k=>`<option value="d:${k}">Tanggal ${k}</option>`).join('');
+  const tg=`<details id="lnx" ${OP.lnx||pm==='base'?'open':''} style="margin-bottom:8px"><summary class="mu">Lanjutan: ${pm==='date'?'per tanggal':'program dasar'}</summary><div class="tabs" style="margin-top:6px"><button class="${pm==='date'?'on':''}" data-a="pm" data-i="date">Per tanggal</button><button class="${pm==='base'?'on':''}" data-a="pm" data-i="base">Program dasar</button></div></details>`;
+  if(pm!=='date')return tg+'<div class="mu" style="margin-bottom:8px">Program dasar adalah pola umum client. Dari sini bisa disalin ke tanggal tertentu di tab Per tanggal.</div>';
+  return tg+`<div class="card"><div class="row"><button data-a="pd" data-d="-1">‹</button><input id="pdt2" type="date" value="${pdate}"><button data-a="pd" data-d="1">›</button><button data-a="ptoday">Hari ini</button></div><div style="margin-top:6px"><b>${esc(dateLong(pdate))}</b></div><div class="row" style="margin-top:8px">${c.att.some(s=>s.date===pdate)?`<button data-a="gocal" data-i="${pdate}">Lihat di kalender</button>`:`<button class="p" data-a="dcal">Tambahkan ke kalender</button>`}</div>${opts?`<div class="row" style="margin-top:8px"><select id="cpf"><option value="">Salin gerakan dari…</option>${opts}</select><button data-a="cpy">Salin</button></div>`:''}</div>`;
+}
+function progAdd(){
+  const dayOpts=`<option value="">Umum (tanpa hari)</option>${Object.keys(TPL).map(x=>`<option ${pgd===x?'selected':''}>${x}</option>`).join('')}`;
+  return `<details id="adx" class="card" ${OP.adx?'open':''}><summary><b>+ Tambah gerakan</b></summary><div class="mu" style="margin:8px 0">Pilih hari latihan dan kategori, centang gerakan, lalu tekan Tambah.</div><div class="row">${pm==='date'?'':`<select id="pgd">${dayOpts}</select>`}<select id="pgc">${catSel(pgc)}</select></div><div id="pkl" style="margin:8px 0">${pkList(pgc)}</div><button class="p" data-a="addPk" style="width:100%">Tambah gerakan terpilih (3 set × 8-12)</button><details style="margin-top:10px"><summary class="mu">Gerakan lain (ketik sendiri)</summary><div class="row" style="margin-top:8px"><input id="ex" placeholder="Nama gerakan" style="flex-basis:100%"><input id="es" type="number" placeholder="Set"><input id="er" placeholder="Reps (mis. 8-10)"><button class="p" data-a="addEx">Tambah</button></div></details></details>`;
+}
+function progList(c0){const c={program:PL(c0)};
+  if(!c.program.length)return `<p class="mu">${pm==='date'?'Belum ada gerakan untuk tanggal ini. Tambahkan di bawah, pakai template, atau salin dari program lain.':'Belum ada gerakan di program dasar client ini.'}</p>`;
+  const gs={};c.program.forEach((e,i)=>{const d=pm==='date'?'':(e.day||'');(gs[d]=gs[d]||[]).push(i)});
+  const ks=Object.keys(gs).sort((a,b)=>a===''?1:b===''?-1:Object.keys(TPL).indexOf(a)-Object.keys(TPL).indexOf(b));
+  return ks.map(d=>`<h3>${d?esc(d):(pm==='date'?'Program':'Umum')} (${gs[d].length} gerakan)</h3>`+gs[d].map(i=>{const e=c.program[i];return `<div class="card"><div class="row sp"><b>${esc(e.name)}</b><div class="row" style="gap:2px"><button class="g" data-a="mvEx" data-i="${i}" data-d="-1">↑</button><button class="g" data-a="mvEx" data-i="${i}" data-d="1">↓</button><button class="g d" data-a="delEx" data-i="${i}">✕</button></div></div><div class="row" style="margin-top:6px"><button data-a="st" data-i="${i}" data-d="-1">−</button><b>${esc(e.sets||'-')}</b><button data-a="st" data-i="${i}" data-d="1">+</button><span class="mu">set ×</span><input class="mini" data-pe="reps" data-i="${i}" value="${esc(e.reps||'')}" placeholder="reps"><span class="mu">reps</span><input class="mini" data-pe="rest" data-i="${i}" value="${esc(e.rest||'')}" placeholder="90"><span class="mu">dtk rest</span></div></div>`}).join('')).join('');
+}
+function sesHTML(c){
+  const L=c.att.filter(s=>s.date===pdate).sort((a,b)=>a.time<b.time?-1:1),fopt=f=>`<option value="">Tanpa fokus</option>${Object.keys(TPL).map(x=>`<option ${f===x?'selected':''}>${x}</option>`).join('')}`;
+  let h=`<div class="card"><div class="row"><button data-a="pd" data-d="-1">‹</button><input id="pdt2" type="date" value="${pdate}"><button data-a="pd" data-d="1">›</button><button data-a="ptoday">Hari ini</button></div><div style="margin-top:6px"><b>${esc(dateLong(pdate))}</b></div></div>`;
+  h+=L.map(s=>{
+    const ex=exFor(c,s),dn=ex.filter(e=>(s.done||[]).includes(e.name)).length,d=s.end&&s.end>s.time?durMin({bed:s.time,wake:s.end}):0;
+    return `<div class="card"><div class="row sp"><select data-se="focus" data-i="${s.id}">${fopt(s.focus)}</select><button class="${s.hadir?'p':''}" data-a="hadir" data-i="${s.id}">${s.plan?'Terjadwal':s.hadir?'Hadir ✓':'Tidak hadir'}</button></div><div class="row" style="margin-top:8px"><label class="lb">Jam mulai<input type="time" data-se="time" data-i="${s.id}" value="${esc(s.time)}"></label><label class="lb">Jam selesai<input type="time" data-se="end" data-i="${s.id}" value="${esc(s.end||'')}"></label></div><div class="row" style="margin-top:8px"><button data-a="sMulai" data-i="${s.id}">Mulai sekarang</button><button data-a="sSelesai" data-i="${s.id}">Selesai sekarang</button>${d?`<span class="mu">Durasi ${fmtDur(d)}</span>`:''}</div><h3>Gerakan (${dn}/${ex.length} selesai)</h3>${ex.length?ex.map(e=>setCard(c,s,e)).join(''):`<p class="mu">Belum ada program untuk hari ini.</p><button data-a="tab" data-i="program">Atur program</button>`}<div class="row" style="margin-top:8px"><button data-a="gocal" data-i="${s.date}">Lihat di kalender</button><button class="g d" data-a="delS" data-i="${s.id}">Hapus sesi</button></div></div>`}).join('');
+  return h+`<div class="card"><h3 style="margin-top:0">${L.length?'Tambah sesi lain':'Belum ada sesi di tanggal ini'}</h3><div class="row"><select id="sf2">${fopt('')}</select><input id="st2" type="time" value="${nowT()}"><button class="p" data-a="addSes">+ Buat sesi</button></div></div>`;
+}
+let rt=null,rtI=null;
+const setsOf=(s,e)=>{s.sets=s.sets||{};return s.sets[e.name]=s.sets[e.name]||Array.from({length:Math.max(1,parseInt(e.sets)||3)},()=>({kg:'',reps:'',done:false}))};
+function prevOf(c,s,n,j){const p=c.att.filter(x=>x.id!==s.id&&(x.date+x.time)<(s.date+s.time)&&x.sets&&x.sets[n]&&x.sets[n].some(r=>r.done)).pop();const r=p&&(p.sets[n][j]||p.sets[n][p.sets[n].length-1]);return r&&r.done?r:null}
+function startRest(k,sec){stopRest();rt={k,end:Date.now()+sec*1e3,sec};rtI=setInterval(tickRest,250)}
+function stopRest(){clearInterval(rtI);rt=null}
+function tickRest(){if(!rt)return stopRest();const l=Math.ceil((rt.end-Date.now())/1e3),b=$('#rtb'),t=$('#rtt');if(l<=0){stopRest();try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}return render()}if(b)b.style.width=(100-l/rt.sec*100)+'%';if(t)t.textContent=Math.floor(l/60)+':'+String(l%60).padStart(2,'0')}
+function setCard(c,s,e){
+  const R=setsOf(s,e),at=`data-i="${s.id}" data-n="${esc(e.name)}"`;
+  const id='e'+(s.id+e.name).replace(/\W/g,''),fi=exFor(c,s).find(x=>setsOf(s,x).some(r=>!r.done)),op=OP[id]!==undefined?OP[id]:!!(fi&&fi.name===e.name);
+  return `<details id="${id}" class="card" style="margin:8px 0" ${op?'open':''}><summary><b style="color:var(--ac)">${esc(e.name)}</b> <span class="mu">${R.filter(r=>r.done).length}/${R.length} set · ${esc(e.reps||'-')} reps · rest ${esc(e.rest||90)}s</span></summary><div class="sg sh"><span>Set</span><span>Previous</span><span>kg</span><span>Reps</span><span>✓</span></div>`+R.map((r,j)=>{const p=prevOf(c,s,e.name,j),k=s.id+e.name+j;return `<div class="sg ${r.done?'dn':''}"><span>${j+1}</span><span class="mu">${p?esc(p.kg)+' kg × '+esc(p.reps):'-'}</span><input type="number" inputmode="decimal" data-sk="kg" ${at} data-j="${j}" value="${esc(r.kg)}" placeholder="${p?esc(p.kg):''}"><input type="number" inputmode="numeric" data-sk="reps" ${at} data-j="${j}" value="${esc(r.reps)}" placeholder="${p?esc(p.reps):''}"><button class="${r.done?'p':''}" data-a="sdone" ${at} data-j="${j}">✓</button></div>${rt&&rt.k===k?'<div class="rb"><i id="rtb" style="width:0"></i><span id="rtt"></span></div>':''}`}).join('')+`<button data-a="sadd" ${at} style="width:100%;margin-top:6px">+ Tambah set</button></details>`;
+}
+function attHTML(c){
+  const h=c.att.filter(s=>s.hadir).length,t=c.att.length;
+  return `<div class="card"><div class="row"><input id="sd" type="date" value="${today()}"><input id="st" type="time" value="${nowT()}"><select id="sf"><option value="">Fokus latihan</option>${Object.keys(TPL).map(x=>`<option>${x}</option>`).join('')}</select><button class="p" data-a="addS">Catat sesi</button></div>
+  <div class="mu" style="margin-top:8px">Hadir ${h} dari ${t} sesi${t?' ('+Math.round(h/t*100)+'%)':''}</div></div>`+
+  [...c.att].reverse().map(s=>`<div class="card"><div class="row sp"><b>${esc(s.date)} · ${esc(s.time)}${s.end?'–'+esc(s.end):''}${s.focus?` <span class="b">${esc(s.focus)}</span>`:''}</b><div class="row"><button class="${s.hadir?'p':''}" data-a="hadir" data-i="${s.id}">${s.plan?'Terjadwal':s.hadir?'Hadir ✓':'Tidak hadir'}</button><button class="g d" data-a="delS" data-i="${s.id}">Hapus</button></div></div>
+  <div>${exFor(c,s).length?exFor(c,s).map(e=>`<label class="ck"><input type="checkbox" data-a="tick" data-i="${s.id}" data-n="${esc(e.name)}" ${s.done.includes(e.name)?'checked':''}>${esc(e.name)}</label>`).join(''):'<span class="mu">Isi program dulu untuk checklist latihan.</span>'}</div></div>`).join('');
+}
+function prHTML(c){
+  const catEx=n=>{const p=c.pr.find(x=>x.ex===n&&x.cat);return p?p.cat:catOf(n)};const names=[...new Set(c.pr.map(p=>p.ex))].filter(n=>!pf||catEx(n)===pf);
+  let h=`<div class="card"><datalist id="dl">${c.program.map(e=>`<option value="${esc(e.name)}">`).join('')}${['Pull-up','Push-up','Sit-up'].map(x=>`<option value="${x}">`).join('')}</datalist><div class="row"><select id="pc">${catSel(pc)}</select><select id="px">${exOpts(pc,c)}</select><input id="pxo" placeholder="Gerakan lain (opsional, ketik sendiri)" style="flex-basis:100%"><input id="pk" type="number" step="0.5" min="0" placeholder="Beban kg (kosong = tanpa beban)"><input id="pr" type="number" min="0" placeholder="Reps"><input id="pd" type="date" value="${pdt||today()}"><button class="p" data-a="addPR">Catat</button></div></div>`;
+  h+=`<div class="row" style="margin-bottom:10px"><select id="pfc"><option value="">Semua kategori</option>${catSel(pf)}</select></div>`;if(!names.length)return h+'<p class="mu">Belum ada catatan beban.</p>';
+  return h+names.map(n=>{
+    const L=c.pr.filter(p=>p.ex===n).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+    const sc2=sc;let m=-1;const rows=L.map((p,i)=>{const isPR=sc2(p)>m&&(m=sc2(p),true);let d='';if(i){const q=L[i-1],dk=(p.kg||0)-(q.kg||0),dr=(p.reps||0)-(q.reps||0);d=dk?(dk>0?'+':'')+dk+' kg':dr?(dr>0?'+':'')+dr+' reps':''}return{p,isPR,d}});
+    const bp=rows.reduce((a,r)=>sc(r.p)>sc(a)?r.p:a,rows[0].p);
+    return `<div class="card"><div class="row sp"><b>${esc(n)} ${catEx(n)?`<span class="b">${esc(catEx(n))}</span>`:''}</b><span class="pr">${fmtP(bp)}</span></div>`+
+    rows.reverse().map(({p,isPR,d})=>`<div class="row sp mu" style="margin-top:4px"><span>${esc(p.date)} · <b style="color:var(--tx)">${fmtP(p)}</b>${d?` (${d})`:''}${isPR?'<span class="new">PR</span>':''}</span><button class="g d" data-a="delPR" data-i="${p.id}">✕</button></div>`).join('')+`</div>`;
+  }).join('');
+}
+const durMin=s=>{const m=t=>{const p=t.split(':');return +p[0]*60+ +p[1]};let d=m(s.wake)-m(s.bed);if(d<=0)d+=1440;return d},fmtDur=m=>`${Math.floor(m/60)} jam${m%60?` ${m%60} mnt`:''}`,sleepList=c=>[...(c.log||[]).filter(x=>x.sleep>0).map(x=>({date:x.date,m:x.sleep*60})),...(c.sleeps||[]).map(s=>({date:s.date,m:durMin(s)}))].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+const sleepRows=(c,inR)=>{const ent=(c.sleeps||[]).filter(inR).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0),ms=[...ent.map(durMin),...(c.log||[]).filter(x=>inR(x)&&x.sleep>0).map(x=>x.sleep*60)];if(!ms.length)return['Tidak ada catatan tidur.'];return [`Rata-rata tidur ${fmtDur(Math.round(ms.reduce((a,b)=>a+b,0)/ms.length))} per hari (${ms.length} catatan)`,...ent.map(s=>`${s.date}: tidur ${s.bed}, bangun ${s.wake} (${fmtDur(durMin(s))})`)]};
+let sd=null;
+function sleepHTML(c){
+  c.sleeps=c.sleeps||[];
+  const L=[...c.sleeps].sort((a,b)=>(a.date+a.bed)<(b.date+b.bed)?-1:1).reverse();
+  return `<h3>Pola tidur</h3><div class="card"><div class="row"><label class="lb">Tanggal bangun<input id="sdt" type="date" value="${sd||today()}"></label><label class="lb">Jam tidur<input id="sb" type="time" value="22:00"></label><label class="lb">Jam bangun<input id="sw" type="time" value="05:00"></label><button class="p" data-a="addSl" style="flex-basis:100%">+ Tambah tidur</button></div></div>`+
+  (L.length?L.map(s=>`<div class="card"><div class="row sp"><b>${esc(s.date)}</b><span class="mu">${fmtDur(durMin(s))}</span></div><div class="row sp" style="margin-top:4px"><span>Tidur <b>${esc(s.bed)}</b> \u2192 bangun <b>${esc(s.wake)}</b></span><button class="g d" data-a="delSl" data-i="${s.id}">\u2715</button></div></div>`).join(''):'<p class="mu">Belum ada catatan tidur.</p>');
+}
+let md=null;
+function mealsHTML(c){
+  c.meals=c.meals||[];
+  const by={};c.meals.forEach(m=>(by[m.date]=by[m.date]||[]).push(m));
+  const days=Object.keys(by).sort().reverse();
+  return `<h3>Pola makan</h3><div class="card"><div class="row"><input id="md" type="date" value="${md||today()}"><input id="mt" type="time" value="${nowT()}"><input id="mn" placeholder="Menu / makanan (mis. nasi, ayam, sayur)" style="flex-basis:100%"><button class="p" data-a="addM" style="flex-basis:100%">+ Tambah waktu makan</button></div></div>`+
+  (days.length?days.map(k=>{const L=by[k].sort((a,b)=>a.time<b.time?-1:1);return `<div class="card"><div class="row sp"><b>${esc(k)}</b><span class="mu">${L.length}x makan</span></div>`+L.map(m=>`<div class="row sp" style="margin-top:4px"><span><b>${esc(m.time)}</b> ${esc(m.note)}</span><button class="g d" data-a="delM" data-i="${m.id}">\u2715</button></div>`).join('')+`</div>`}).join(''):'<p class="mu">Belum ada catatan pola makan.</p>');
+}
+function logHTML(c){return logHTML0(c)+sleepHTML(c)+mealsHTML(c)}
+function logHTML0(c){
+  c.log=c.log||[];
+  const L=[...c.log].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  const W=L.filter(x=>x.bb>0),Sl=L.filter(x=>x.sleep>0).slice(-7);
+  const last=W.length?W[W.length-1].bb:null,d=W.length>1?Math.round((last-W[0].bb)*10)/10:0;
+  const SH=sleepList(c).slice(-7),avg=SH.length?(SH.reduce((s,x)=>s+x.m,0)/SH.length/60).toFixed(1):null;
+  let h=`<div class="card"><div class="row"><input id="ld" type="date" value="${today()}"><input id="lb" type="number" step="0.1" placeholder="BB (kg)"><button class="p" data-a="addL" style="flex-basis:100%">Catat</button></div></div>`;
+  if(!L.length)return h+'<p class="mu">Belum ada catatan BB atau tidur.</p>';
+  h+=`<div class="stat"><div><b>${last==null?'-':last}</b><span class="mu">BB terakhir (kg)</span></div><div><b>${W.length>1?(d>0?'+':'')+d:'-'}</b><span class="mu">Perubahan BB</span></div><div><b>${avg==null?'-':avg}</b><span class="mu">Rata-rata tidur (jam)</span></div></div>`;
+  let pb=null;
+  const rows=L.map(x=>{let dd=null;if(x.bb>0){if(pb!==null)dd=Math.round((x.bb-pb)*10)/10;pb=x.bb}return{x,dd}}).reverse();
+  return h+rows.map(({x,dd})=>`<div class="card"><div class="row sp"><b>${esc(x.date)}</b><button class="g d" data-a="delL" data-i="${x.id}">Hapus</button></div><div class="mu">${x.bb>0?`BB <b style="color:var(--tx)">${x.bb} kg</b>${dd?` (${dd>0?'+':''}${dd})`:''}`:''}${x.bb>0&&x.sleep>0?' · ':''}${x.sleep>0?`Tidur <b style="color:var(--tx)">${x.sleep} jam</b>`:''}</div>${x.food?`<div style="margin-top:4px">🍽 ${esc(x.food)}</div>`:''}</div>`).join('');
+}
+let rp='week';
+function rptData0(c){
+  const days={today:0,week:6,month:29}[rp],end=today(),dt=new Date();dt.setDate(dt.getDate()-days);const st=dt.toLocaleDateString('sv');
+  const lbl={today:'Hari ini',week:'7 hari terakhir',month:'30 hari terakhir'}[rp],inR=x=>x.date>=st&&x.date<=end,r1=n=>Math.round(n*10)/10,sg=n=>(n>0?'+':'')+n;
+  const ses=c.att.filter(x=>inR(x)&&!x.plan),hd=ses.filter(x=>x.hadir),cnt={};
+  ses.forEach(s=>s.hadir&&(s.done||[]).forEach(n=>cnt[n]=(cnt[n]||0)+1));
+  const att=ses.length?[`Hadir ${hd.length} dari ${ses.length} sesi (${Math.round(hd.length/ses.length*100)}%)`,...(Object.keys(cnt).length?['Gerakan dilakukan: '+Object.entries(cnt).map(([n,k])=>`${n} (${k}x)`).join(', ')]:[]),...ses.map(s=>`${s.date} ${s.time}${s.focus?' ('+s.focus+')':''}: ${s.hadir?'Hadir':'Tidak hadir'}`)]:['Belum ada sesi tercatat pada periode ini.'];
+  const pr=[...new Set(c.pr.filter(inR).map(p=>p.ex))].flatMap(ex=>{const top=a=>a.reduce((x,y)=>sc(y)>sc(x)?y:x),bp=top(c.pr.filter(p=>p.ex===ex&&inR(p))),bf=c.pr.filter(p=>p.ex===ex&&p.date<st),bq=bf.length?top(bf):null;const ents=c.pr.filter(p=>p.ex===ex&&inR(p)).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0).map(p=>`   - ${p.date}: ${fmtP(p)}`),ct=(c.pr.find(p=>p.ex===ex&&p.cat)||{}).cat||catOf(ex);return [`${ex}${ct?' ('+ct+')':''}: ${fmtP(bp)}`+(!bq?' (catatan pertama)':sc(bp)>sc(bq)?` (rekor baru, sebelumnya ${fmtP(bq)})`:` (rekor sebelumnya ${fmtP(bq)})`),...ents]});
+  const gx=e=>`${e.name} ${e.sets||'-'}x${e.reps||'-'}`,dk=Object.keys(c.daily||{}).filter(k=>k>=st&&k<=end&&c.daily[k].length).sort(),gb={};c.program.forEach(e=>(gb[e.day||'Umum']=gb[e.day||'Umum']||[]).push(e));
+  const prog=dk.length?dk.map(k=>`${k}: ${c.daily[k].map(gx).join(', ')}`):c.program.length?Object.keys(gb).map(k=>`Program dasar ${k}: ${gb[k].map(gx).join(', ')}`):['Belum ada program pada periode ini.'];
+  const lg=(c.log||[]).filter(inR).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0),W=lg.filter(x=>x.bb>0),sl=lg.filter(x=>x.sleep>0),fd=lg.filter(x=>x.food);
+  const bw=W.length>1?[`BB ${W[0].bb} kg menjadi ${W[W.length-1].bb} kg (selisih ${sg(r1(W[W.length-1].bb-W[0].bb))} kg)`]:W.length?[`BB ${W[0].bb} kg`]:['Tidak ada catatan BB pada periode ini.'];
+  const hs=[...sleepRows(c,inR),...(()=>{const ml=(c.meals||[]).filter(inR),by={};ml.forEach(m=>(by[m.date]=by[m.date]||[]).push(m));const r=Object.keys(by).sort().map(k=>`${k}: ${by[k].length}x makan - `+by[k].sort((a,b)=>a.time<b.time?-1:1).map(m=>m.time+(m.note?' '+m.note:'')).join('; '));const all=[...r,...fd.map(x=>`${x.date}: ${x.food}`)];return all.length?all:['Tidak ada catatan pola makan.']})()];
+  return{lbl,st,end,secs:[{h:'Profil',rows:[`${c.gender}, ${c.age} th`,`Level ${c.level}, program ${c.cat}`]},{h:'Program latihan',rows:prog},{h:'Kehadiran dan latihan',rows:att},{h:'Rekor beban (PR)',rows:pr.length?pr:['Belum ada catatan beban pada periode ini.']},{h:'Berat badan',rows:bw},{h:'Tidur dan pola makan',rows:hs}]};
+}
+let rm='ringkas';
+function rptData(c){
+  const R=rptData0(c),g=h=>(R.secs.find(s=>s.h===h)||{rows:[]}).rows,inR=x=>x.date>=R.st&&x.date<=R.end;
+  const ses=c.att.filter(x=>inR(x)&&!x.plan).sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1),dur=s=>s.end&&s.end>s.time?durMin({bed:s.time,wake:s.end}):0,tot=ses.reduce((a,s)=>a+(s.hadir?dur(s):0),0);
+  if(rm==='ringkas'){
+    const pr=g('Rekor beban (PR)').filter(l=>!l.startsWith('   -')&&/rekor baru|catatan pertama/.test(l));
+    R.secs=[R.secs[0],{h:'Ringkasan',rows:[g('Kehadiran dan latihan')[0],...(tot?['Total waktu latihan: '+fmtDur(tot)]:[]),...(pr.length?pr.map(l=>'PR: '+l):['Belum ada rekor baru pada periode ini.']),g('Berat badan')[0],g('Tidur dan pola makan')[0]]}];
+    return R;
+  }
+  const det=ses.length?[g('Kehadiran dan latihan')[0],...ses.flatMap(s=>{const d=dur(s),L=s.hadir?exFor(c,s).map(e=>`   - ${e.name} ${e.sets||'-'}x${e.reps||'-'}: ${(s.done||[]).includes(e.name)?'selesai':'belum'}`):[];return [`${s.date} ${s.time}${s.end?'-'+s.end:''}${d?' ('+fmtDur(d)+')':''}${s.focus?', '+s.focus:''}: ${s.hadir?'Hadir':'Tidak hadir'}`,...L]})]:g('Kehadiran dan latihan');
+  R.secs=R.secs.map(s=>s.h==='Kehadiran dan latihan'?{h:'Detail sesi latihan',rows:det}:s);
+  return R;
+}
+function rptHTML(c){
+  const R=rptData(c);
+  return `<div class="tabs">${[['today','Hari ini'],['week','Mingguan'],['month','Bulanan']].map(([k,l])=>`<button class="${rp===k?'on':''}" data-a="per" data-i="${k}">${l}</button>`).join('')}</div><div class="tabs" style="margin-top:0"><button class="${rm==='ringkas'?'on':''}" data-a="rm" data-i="ringkas">Ringkas</button><button class="${rm==='rinci'?'on':''}" data-a="rm" data-i="rinci">Rinci</button></div><div class="mu" style="margin-bottom:8px">${esc(R.lbl)}: ${R.st} s/d ${R.end}</div>`+R.secs.map(s=>`<div class="card rpt"><h2>${s.h}</h2>${s.rows.map(r=>`<div>${esc(r)}</div>`).join('')}</div>`).join('')+`<button class="p" data-a="pdf" style="width:100%">Unduh PDF untuk client</button><div id="rmsg" class="mu" style="margin-top:8px"></div>`;
+}
+async function makePDF(c){
+  const m=$('#rmsg'),J=window.jspdf&&window.jspdf.jsPDF;
+  if(!J){m.textContent='Library PDF belum termuat. Cek koneksi internet lalu coba lagi.';return}
+  const R=rptData(c),t=s=>String(s).replace(/[^\x20-\x7E\u00A0-\u00FF]/g,''),d=new J({unit:'mm',format:'a4'});
+  let y=20;
+  const ln=(txt,sz,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(sz);d.splitTextToSize(t(txt),175).forEach(l=>{if(y>280){d.addPage();y=20}d.text(l,18,y);y+=sz*0.5})};
+  ln('Laporan Progress Latihan',18,1);y+=2;ln(c.name,14,1);ln(`Periode: ${R.lbl} (${R.st} s/d ${R.end})`,10);y+=4;
+  R.secs.forEach(s=>{ln(s.h,12,1);y+=1;s.rows.forEach(r=>{ln(r,10);y+=1.5});y+=4});
+  const fn='Laporan-'+(t(c.name).trim().replace(/[^A-Za-z0-9]+/g,'-')||'client')+'-'+rp+'-'+rm+'-'+today()+'.pdf';
+  try{
+    const dl=await claude.use('downloads');
+    if(dl)await dl.save({filename:fn,data:d.output('arraybuffer')});else d.save(fn);
+    m.textContent='PDF siap: '+fn;
+  }catch(e){m.textContent=(e&&e.code==='declined')?'Unduhan dibatalkan.':'PDF gagal disimpan'+(e&&e.code?' ('+e.code+')':'')+'.'}
+}
+function renderDetail(){
+  const c=cur();if(!c){sel=null;return renderList()}
+  $('#app').innerHTML=`<div class="row sp"><button data-a="back">← Kembali</button></div>
+  <h1 style="margin-top:12px">${esc(c.name)}</h1><div>${badges(c)}</div>
+  <details id="edc" class="card" style="margin-top:10px" ${OP.edc||delArm?'open':''}><summary class="mu">Edit client</summary><div class="row" style="margin-top:8px"><button class="${delArm?'p':'g d'}" data-a="delC" ${delArm?'style="background:var(--dg);border-color:var(--dg)"':''}>${delArm?'Yakin hapus client?':'Hapus client'}</button></div><div class="row" style="margin-top:8px"><input type="color" data-f="col" value="${colorOf(c)}" title="Warna di kalender" style="flex:none;width:44px;padding:2px"><select data-f="level">${LV.map(x=>`<option ${c.level===x?'selected':''}>${x}</option>`).join('')}</select><select data-f="cat">${CT.map(x=>`<option ${c.cat===x?'selected':''}>${x}</option>`).join('')}</select></div>
+  </details><div class="tabs">${[['program','Program'],['ses','Sesi'],['pr','Progres'],['rpt','Laporan']].map(([k,l])=>`<button class="${tab===k?'on':''}" data-a="tab" data-i="${k}">${l}</button>`).join('')}</div>
+  ${tab==='ses'?sesHTML(c)+`<button data-a="tab" data-i="att" style="width:100%">Riwayat sesi</button>`:tab==='att'?`<button data-a="tab" data-i="ses">← Sesi</button>`+attHTML(c):tab==='program'?progHTML(c):tab==='pr'?`<div class="tabs" style="margin-top:0"><button class="${ps==='pr'?'on':''}" data-a="ps" data-i="pr">PR</button><button class="${ps==='log'?'on':''}" data-a="ps" data-i="log">Kondisi</button></div>`+(ps==='log'?logHTML(c):prHTML(c)):rptHTML(c)}`;
+}
+const PAL=['#0f766e','#2563eb','#c026d3','#ea580c','#ca8a04','#dc2626','#7c3aed','#0891b2','#65a30d','#db2777'],MN=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+let vw='list',cy=+today().slice(0,4),cm=+today().slice(5,7)-1,cd=today();
+const sc=p=>(p.kg||0)*10000+(p.reps||0),fmtP=p=>p.kg>0?`${p.kg} kg${p.reps?` × ${p.reps} reps`:''}`:`${p.reps||0} reps`;
+const LIB={'Dada':['Barbell Bench Press','Incline Bench Press','Dumbbell Press','Incline Dumbbell Press','Cable Fly','Dumbbell Fly','Chest Press Machine','Pec Deck','Push-up','Dips'],'Back':['Deadlift','Pull-up','Chin-up','Lat Pulldown','Barbell Row','Dumbbell Row','Seated Cable Row','T-Bar Row','Face Pull','Back Extension','Inverted Row'],'Leg':['Back Squat','Front Squat','Leg Press','Romanian Deadlift','Walking Lunge','Bulgarian Split Squat','Leg Extension','Leg Curl','Hip Thrust','Calf Raise','Goblet Squat','Glute Bridge'],'Bahu':['Overhead Press','Dumbbell Shoulder Press','Lateral Raise','Front Raise','Rear Delt Fly','Upright Row','Shrug'],'Lengan':['Barbell Curl','Dumbbell Curl','Hammer Curl','Preacher Curl','Triceps Pushdown','Skull Crusher','Overhead Triceps Extension','Close-grip Bench Press'],'Core':['Sit-up','Crunch','Plank','Leg Raise','Russian Twist','Cable Crunch','Hanging Knee Raise']},CL={'Dada':'Dada (Chest)','Back':'Back','Leg':'Leg','Bahu':'Bahu (Shoulder)','Lengan':'Lengan (Arms)','Core':'Core'};
+let pc='Dada',pf='',pdt=null;
+const catSel=s=>Object.keys(LIB).map(k=>`<option value="${k}" ${k===s?'selected':''}>${CL[k]||k}</option>`).join(''),exOpts=(k,c)=>(LIB[k]||[]).map(x=>`<option>${x}</option>`).join('')+(c&&c.program.length?`<optgroup label="Program client">${c.program.map(e=>`<option>${esc(e.name)}</option>`).join('')}</optgroup>`:''),catOf=n=>Object.keys(LIB).find(k=>LIB[k].some(x=>x.toLowerCase()===String(n).toLowerCase()))||'';
+function colorOf(c){if(!c.col)c.col=PAL[S.clients.indexOf(c)%PAL.length];return c.col}
+function topNav(){return `<div class="tabs" style="margin-top:0"><button class="${vw==='list'?'on':''}" data-a="vw" data-i="list">Client</button><button class="${vw==='cal'?'on':''}" data-a="vw" data-i="cal">Kalender</button></div>`}
+function renderCal(){
+  const ds=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,td=today(),by={};
+  S.clients.forEach(c=>c.att.forEach(s=>{(by[s.date]=by[s.date]||[]).push({c,s})}));
+  S.clients.forEach(c=>virt(c).forEach(s=>{(by[s.date]=by[s.date]||[]).push({c,s})}));
+  const off=(new Date(cy,cm,1).getDay()+6)%7,nd=new Date(cy,cm+1,0).getDate();
+  let cells=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="mu cw">${x}</div>`).join('');
+  for(let i=0;i<off;i++)cells+='<div></div>';
+  for(let d=1;d<=nd;d++){const k=ds(cy,cm,d),cols=[...new Set((by[k]||[]).map(x=>colorOf(x.c)))];
+    cells+=`<div class="cd ${k===td?'td':''} ${k===cd?'sl':''}" data-a="cday" data-i="${k}"><span>${d}</span><div class="dots">${cols.slice(0,4).map(x=>`<i class="dot" style="background:${x}"></i>`).join('')}${cols.length>4?'+':''}</div><div class="fl">${(by[k]||[]).filter(x=>x.s.focus).slice(0,2).map(x=>`<span style="color:${colorOf(x.c)}">${esc(x.s.focus.split(' ')[0])}</span>`).join('')}</div></div>`}
+  const dd=new Date(+cd.slice(0,4),+cd.slice(5,7)-1,+cd.slice(8,10),12),title=dd.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const day=(by[cd]||[]).sort((a,b)=>a.s.time<b.s.time?-1:1);
+  $('#app').innerHTML=`<h1>Client Tracker</h1>${topNav()}
+  <div class="card"><div class="row sp"><div class="row" style="gap:4px"><button data-a="cm" data-i="-12">«</button><button data-a="cm" data-i="-1">‹</button></div><b>${MN[cm]} ${cy}</b><div class="row" style="gap:4px"><button data-a="cm" data-i="1">›</button><button data-a="cm" data-i="12">»</button></div></div>
+  <div class="grid">${cells}</div><button data-a="ct" style="margin-top:8px;width:100%">Ke hari ini</button></div>
+  <div class="card"><h2 style="margin-bottom:8px">${esc(title)}</h2>
+  ${day.length?day.map(({c,s})=>`<div class="ses" style="border-left:4px solid ${colorOf(c)}"><div class="row sp"><span class="cl" data-a="open" data-i="${c.id}"><b>${esc(s.time)}${s.end?'–'+esc(s.end):''}</b> ${esc(c.name)}${s.focus?` <span class="b">${esc(s.focus)}</span>`:''}</span><span class="mu">${s.plan?'Terjadwal':s.hadir?'Hadir':'Tidak hadir'}</span></div>${dayProg(c,s)}<div class="row" style="margin-top:6px">${s.virtual?`<button class="p" data-a="vres" data-c="${c.id}" data-d="${s.date}" data-t="${esc(s.time)}" data-f="${esc(s.focus||'')}" data-h="1">Hadir</button><button data-a="vres" data-c="${c.id}" data-d="${s.date}" data-t="${esc(s.time)}" data-f="${esc(s.focus||'')}" data-h="0">Tidak hadir</button>`:''}${s.plan&&!s.virtual?`<button class="p" data-a="jres" data-c="${c.id}" data-i="${s.id}" data-h="1">Hadir</button><button data-a="jres" data-c="${c.id}" data-i="${s.id}" data-h="0">Tidak hadir</button>`:''}${s.virtual?'':`<button class="g d" data-a="jdel" data-c="${c.id}" data-i="${s.id}">Hapus</button>`}</div></div>`).join(''):'<p class="mu">Belum ada jadwal di hari ini.</p>'}
+  ${S.clients.length?`<h3>Tambah jadwal</h3><div class="row"><select id="jc">${S.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><input id="jt" type="time" value="08:00"><select id="jf"><option value="">Fokus latihan</option>${Object.keys(TPL).map(x=>`<option>${x}</option>`).join('')}</select><button class="p" data-a="addJ">Tambah</button></div>`:'<p class="mu">Tambahkan client dulu untuk membuat jadwal.</p>'}</div>
+  ${S.clients.length?`<div class="card row">${S.clients.map(c=>`<span class="b" style="border-color:${colorOf(c)}"><i class="dot" style="background:${colorOf(c)}"></i>${esc(c.name)}</span>`).join('')}</div>`:''}`;
+}
+function render(){S.clients.forEach(colorOf);sel?renderDetail():vw==='cal'?renderCal():renderList()}
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-a]');if(!el)return;
+  const a=el.dataset.a,i=el.dataset.i,c=cur(),v=id=>($(id)||{}).value||'';
+  if(a!=='clrEx')clrArm=false;
+  if(a==='addC'){const name=v('#nn').trim();if(!name)return $('#nn').focus();
+    S.clients.push({id:uid(),name,gender:v('#ng'),age:v('#na')||'-',level:v('#nl'),cat:v('#nc'),program:[],att:[],pr:[],log:[]});applyTpl(S.clients[S.clients.length-1],v('#nt'));}
+  else if(a==='open'){sel=i;tab='program';pdate=vw==='cal'?cd:today();delArm=false;}
+  else if(a==='back'){sel=null;delArm=false;}
+  else if(a==='delC'){if(!delArm){delArm=true;return render()}S.clients=S.clients.filter(x=>x.id!==sel);sel=null;delArm=false;}
+  else if(a==='tab'){tab=i;}
+  else if(a==='addEx'){const n=v('#ex').trim();if(!n)return $('#ex').focus();PL(c).push({name:n,sets:v('#es'),reps:v('#er'),day:pm==='date'?'':v('#pgd')});}
+  else if(a==='delEx'){PL(c).splice(+i,1);}
+  else if(a==='addPk'){const L=PL(c),day=pm==='date'?'':v('#pgd');document.querySelectorAll('[data-pk]:checked').forEach(b=>{const n=b.dataset.pk;if(!L.some(e=>e.name.toLowerCase()===n.toLowerCase()&&(e.day||'')===day))L.push({name:n,sets:3,reps:'8-12',day})});if(pm!=='date')pgd=day;}
+  else if(a==='mvEx'){const L=PL(c),k=+i,d=+el.dataset.d,dy=L[k].day||'';let j=k+d;while(j>=0&&j<L.length&&(L[j].day||'')!==dy)j+=d;if(j>=0&&j<L.length){const t=L[k];L[k]=L[j];L[j]=t}}
+  else if(a==='st'){const e=PL(c)[+i];e.sets=Math.max(1,(parseInt(e.sets)||0)+(+el.dataset.d));}
+  else if(a==='pm'){pm=i;}
+  else if(a==='pd'){const t=new Date(+pdate.slice(0,4),+pdate.slice(5,7)-1,+pdate.slice(8,10)+(+el.dataset.d),12);pdate=t.toLocaleDateString('sv');}
+  else if(a==='ptoday'){pdate=today();}
+  else if(a==='cpy'){const val=v('#cpf');if(!val)return;const L=PL(c),src=val[0]==='b'?c.program.filter(e=>(e.day||'')===val.slice(2)):((c.daily||{})[val.slice(2)]||[]);src.forEach(e=>{if(!L.some(x=>x.name.toLowerCase()===e.name.toLowerCase()))L.push({name:e.name,sets:e.sets,reps:e.reps,day:''})});}
+  else if(a==='applyT'){const k=v('#tp');if(!k)return $('#tp').focus();applyTpl(c,k,PL(c));}
+  else if(a==='clrEx'){if(!clrArm){clrArm=true;return render()}PL(c).length=0;clrArm=false;}
+  else if(a==='addS'){c.att.push({id:uid(),date:v('#sd')||today(),time:v('#st')||nowT(),focus:v('#sf'),hadir:true,done:[]});c.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1);}
+  else if(a==='hadir'){const s=c.att.find(x=>x.id===i);s.hadir=s.plan?true:!s.hadir;s.plan=false;}
+  else if(a==='delS'){c.att=c.att.filter(x=>x.id!==i);}
+  else if(a==='tick'){const s=c.att.find(x=>x.id===i),n=el.dataset.n;s.done=el.checked?[...new Set([...s.done,n])]:s.done.filter(x=>x!==n);save();if(tab==='ses')render();return;}
+  else if(a==='addPR'){const ex=(v('#pxo').trim()||v('#px')),kg=parseFloat(v('#pk'))||0,rs=parseInt(v('#pr'))||0;if(!ex||(!(kg>0)&&!(rs>0)))return $(ex?'#pr':'#px').focus();c.pr.push({id:uid(),ex,cat:v('#pc'),kg,reps:rs,date:v('#pd')||today()});pc=v('#pc');pdt=v('#pd')||today();}
+  else if(a==='delPR'){c.pr=c.pr.filter(x=>x.id!==i);}
+  else if(a==='addL'){const bb=parseFloat(v('#lb'))||0,sl=parseFloat(v('#ls'))||0,fd=v('#lf').trim();if(!bb&&!sl&&!fd)return $('#lb').focus();c.log=c.log||[];c.log.push({id:uid(),date:v('#ld')||today(),bb,sleep:sl,food:fd});}
+  else if(a==='delL'){c.log=(c.log||[]).filter(x=>x.id!==i);}
+  else if(a==='per'){rp=i;}
+  else if(a==='rm'){rm=i;}
+  else if(a==='sMulai'){const s=c.att.find(x=>x.id===i);s.time=nowT();s.plan=false;s.hadir=true;}
+  else if(a==='sSelesai'){const s=c.att.find(x=>x.id===i);s.end=nowT();if(s.plan){s.plan=false;s.hadir=true}}
+  else if(a==='addSes'){const t=v('#st2')||nowT();c.att.push({id:uid(),date:pdate,time:t,focus:v('#sf2'),hadir:pdate<=today(),plan:pdate>today(),done:[]});c.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1);}
+  else if(a==='addM'){const dt=v('#md')||today(),tm2=v('#mt');if(!tm2)return $('#mt').focus();c.meals=c.meals||[];c.meals.push({id:uid(),date:dt,time:tm2,note:v('#mn').trim()});md=dt;}
+  else if(a==='delM'){c.meals=(c.meals||[]).filter(x=>x.id!==i);}
+  else if(a==='addSl'){const dt=v('#sdt')||today(),b=v('#sb'),w=v('#sw');if(!b||!w)return;c.sleeps=c.sleeps||[];c.sleeps.push({id:uid(),date:dt,bed:b,wake:w});sd=dt;}
+  else if(a==='delSl'){c.sleeps=(c.sleeps||[]).filter(x=>x.id!==i);}
+  else if(a==='sdone'||a==='sadd'){const s=c.att.find(x=>x.id===i),e=s&&exFor(c,s).find(x=>x.name===el.dataset.n),R=e&&setsOf(s,e);if(R){if(a==='sadd')R.push({kg:'',reps:'',done:false});else{const j=+el.dataset.j,r=R[j],p=prevOf(c,s,e.name,j);r.done=!r.done;if(r.done){if(r.kg===''&&p)r.kg=p.kg;if(r.reps===''&&p)r.reps=p.reps;s.hadir=true;s.plan=false;startRest(s.id+e.name+j,parseInt(e.rest)||90)}else if(rt&&rt.k===s.id+e.name+j)stopRest();s.done=R.every(x=>x.done)?[...new Set([...(s.done||[]),e.name])]:(s.done||[]).filter(x=>x!==e.name)}}}
+  else if(a==='pkt'){OP.pkd=true;c.pkg=c.pkg||{};c.pkg.type=i;if(i==='bulanan'){c.pkg.months=c.pkg.months||1;c.pkg.start=c.pkg.start||today()}}
+  else if(a==='pwd'){c.pkg=c.pkg||{type:'bulanan'};const w=+i,d=c.pkg.days||[];c.pkg.days=d.includes(w)?d.filter(x=>x!==w):[...d,w]}
+  else if(a==='vres'){const c2=S.clients.find(x=>x.id===el.dataset.c);if(c2){c2.att.push({id:uid(),date:el.dataset.d,time:el.dataset.t,focus:el.dataset.f,hadir:el.dataset.h==='1',plan:false,done:[]});c2.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1)}}
+  else if(a==='pkgcal'){virt(c).forEach(v=>c.att.push({id:uid(),date:v.date,time:v.time,focus:v.focus,hadir:false,plan:true,done:[]}));c.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1)}
+  else if(a==='dcal'){if(!c.att.some(s=>s.date===pdate)){const wd=new Date(+pdate.slice(0,4),+pdate.slice(5,7)-1,+pdate.slice(8,10),12).getDay();c.att.push({id:uid(),date:pdate,time:(c.pkg&&c.pkg.time)||'08:00',focus:((c.pkg&&c.pkg.focus)||{})[wd]||'',hadir:false,plan:true,done:[]});c.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1)}}
+  else if(a==='gocal'){vw='cal';sel=null;cd=i;cy=+i.slice(0,4);cm=+i.slice(5,7)-1}
+  else if(a==='ps'){ps=i}
+  else if(a==='pdf'){makePDF(c);return;}
+  else if(a==='vw'){vw=i;sel=null;}
+  else if(a==='cm'){const d=new Date(cy,cm+(+i),1);cy=d.getFullYear();cm=d.getMonth();}
+  else if(a==='ct'){const t=today();cy=+t.slice(0,4);cm=+t.slice(5,7)-1;cd=t;}
+  else if(a==='cday'){cd=i;}
+  else if(a==='addJ'){const c2=S.clients.find(x=>x.id===v('#jc'));if(!c2)return;c2.att.push({id:uid(),date:cd,time:v('#jt')||'08:00',focus:v('#jf'),hadir:false,plan:true,done:[]});c2.att.sort((x,y)=>(x.date+x.time)<(y.date+y.time)?-1:1);}
+  else if(a==='jres'||a==='jdel'){const c2=S.clients.find(x=>x.id===el.dataset.c);if(c2){if(a==='jdel')c2.att=c2.att.filter(x=>x.id!==i);else{const s=c2.att.find(x=>x.id===i);s.plan=false;s.hadir=el.dataset.h==='1';}}}
+  save();render();
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='sq'){q=e.target.value;$('#lst').innerHTML=listHTML();}
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='fc'){fc=t.value;$('#lst').innerHTML=listHTML();}
+  else if(t.id==='pc'){pc=t.value;$('#px').innerHTML=exOpts(pc,cur());}
+  else if(t.id==='pfc'){pf=t.value;render();}
+  else if(t.id==='pgc'){pgc=t.value;$('#pkl').innerHTML=pkList(pgc);}
+  else if(t.id==='pgd'){pgd=t.value;}
+  else if(t.id==='pdt2'){pdate=t.value||today();render();}
+  else if(t.dataset.sk){const s=cur().att.find(x=>x.id===t.dataset.i),R=s&&s.sets&&s.sets[t.dataset.n];if(R&&R[+t.dataset.j]){R[+t.dataset.j][t.dataset.sk]=t.value;save()}}
+  else if(t.dataset.pgf!==undefined){const c=cur();c.pkg=c.pkg||{type:'bulanan'};c.pkg.focus=c.pkg.focus||{};c.pkg.focus[t.dataset.pgf]=t.value;if(t.value)applyTpl(c,t.value);save();render()}
+  else if(t.dataset.pg){const c=cur();c.pkg=c.pkg||{type:'bulanan'};c.pkg[t.dataset.pg]=t.value;save();render()}
+  else if(t.dataset.se){const s=cur().att.find(x=>x.id===t.dataset.i);if(s){s[t.dataset.se]=t.value;save();render();}}
+  else if(t.dataset.pe){const e=PL(cur())[+t.dataset.i];e[t.dataset.pe]=t.value;save();}
+  else if(t.dataset.f){cur()[t.dataset.f]=t.value;save();render();}
+});
+render();init();
+</script>
+</body>
+</html>
